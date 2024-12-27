@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summary</title>
+    <style>
+        body {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            background-color: #f5faff; /* Soft blue background */
+        }
+
+        /* Navbar styles */
+        .navbar {
+            background-color: #183a75; /* Darker blue */
+            width: 250px;
+            padding: 20px;
+            height: 100vh;
+            color: white;
+        }
+
+        .navbar .profile {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .navbar a {
+            display: block;
+            padding: 10px 0;
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            margin: 10px 0;
+            text-align: left;
+            border-radius: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .navbar a:hover {
+            background-color: #ccf0d9; /* Soft green on hover */
+            color: #183a75;
+        }
+
+        /* Main content styles */
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #4a90e2;
+        }
+
+        /* Chart container */
+        .chart-container {
+            width: 80%;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Chart placeholder styling */
+        .chart-container img {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="navbar">
+        <div class="profile">
+            <p>My Profile</p>
+        </div>
+        <a href="{{url_for('cus_home')}}">Home</a>
+        <a href="{{url_for('cus_search')}}">Search</a>
+        <a href="{{url_for('cus_summary')}}">Summary</a>
+        <a href="{{url_for('logout')}}">Logout</a>
+    </div>
+
+    <!-- Main content -->
+    <div class="main-content">
+        <h2>Service Requests</h2>
+
+        <!-- Chart container -->
+        <div class="chart-container">
+            <img src="path/to/chart-image.png" alt="Service Requests Chart">
+        </div>
+    </div>
+
+</body>
+</html>

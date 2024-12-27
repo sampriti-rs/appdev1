@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignUp Page</title>
+    <style>
+        /* Page styling */
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f8ff;
+            margin: 0;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+
+        /* Flash messages container */
+        .flashes {
+            width: 350px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .flashes .alert {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .alert-success {
+            background-color: #28a745;
+        }
+
+        .alert-danger {
+            background-color: #dc3545;
+        }
+
+        .alert-warning {
+            background-color: #ffc107;
+            color: #000;
+        }
+
+        /* Close button for flash messages */
+        .flashes .close {
+            margin-left: 10px;
+            color: #fff;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        /* Form container styling */
+        .login-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            text-align: center;
+        }
+
+        /* Form heading */
+        .login-container h2 {
+            margin-bottom: 20px;
+            color: #333333;
+        }
+
+        /* Input fields styling */
+        .login-container input[type="text"],
+        .login-container input[type="password"],
+        .login-container select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #cccccc;
+            border-radius: 20px;
+            box-sizing: border-box;
+            font-family: Georgia, serif;
+        }
+
+        /* Placeholder text style to Georgia */
+        .login-container input::placeholder {
+            font-family: Georgia, serif;
+        }
+
+        /* Button styling */
+        .login-container button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 20px;
+            color: #ffffff;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        /* Button hover effect */
+        .login-container button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Links styling */
+        .login-container a {
+            display: block;
+            margin-top: 10px;
+            color: #ff69b4;
+            text-decoration: none;
+        }
+
+        /* Link hover effect */
+        .login-container a:hover {
+            text-decoration: underline;
+        }
+
+        /* Hide professional-exclusive fields by default */
+        .hidden {
+            display: none;
+        }
+
+        /* Eye icon and password container */
+        .eye-icon {
+            cursor: pointer;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+        }
+
+        .password-container {
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <!-- Flash messages -->
+    <div class="flashes">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+                {{ message }}
+                <button type="button" class="close" onclick="this.parentElement.style.display='none';">&times;</button>
+            </div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Sign-up form -->
+    <div class="login-container">
+        <h2>Sign Up</h2>
+        <form id="signupForm" action="{{url_for('signup')}}" method="POST">
+            <input type="text" placeholder="Name" name="username" required>
+            <input type="text" placeholder="Email" name="email" required>
+            <input type="text" placeholder="Contact Number" name="contact_num" required>
+            <input type="text" placeholder="Address" name="address" required>
+            <input type="text" placeholder="Pin Code" name="pincode" required>
+
+            <!-- Password field with eye icon -->
+            <div class="password-container">
+                <input type="password" placeholder="Password" name="password" id="password" required>
+                <span class="eye-icon" onclick="togglePassword()">
+                    <img id="toggleIcon" src="https://img.icons8.com/ios-glyphs/30/000000/visible.png" />
+                </span>
+            </div>
+
+            <!-- Role selection dropdown -->
+            <select id="roleSelect" name="role" required>
+                <option value="" disabled selected>Select Role</option>
+                <option value="customer">Customer</option>
+                <option value="professional">Professional</option>
+            </select>
+
+            <!-- Professional-exclusive fields (hidden by default) -->
+            <div id="professionalFields" class="hidden">
+                <select id="serviceSelect" name="service_type">
+                    <option value="" disabled selected>Service Type</option>
+                    <option value="Women's Salon and Spa">Women's Salon and Spa</option>
+                    <option value="Men's Salon and Spa">Men's Salon and Spa</option>
+                    <option value="AC and Appliance repair">AC and Appliance repair</option>
+                    <option value="Washing Machine and Geyser Services">Washing Machine and Geyser Services</option>
+                    <option value="Cleaning and Pest Control">Cleaning and Pest Control</option>
+                    <option value="Electrician, Plumber and Carpenter Services">Electrician, Plumber and Carpenter Services</option>
+                    <option value="Water Purifier Service">Water Purifier Services</option>
+                    <option value="Smart Lock Services">Smart Lock Services</option>
+                    <option value="Painting and Waterproofing Services">Painting and Waterproofing Services</option>
+                </select>
+                <input type="text" placeholder="Experience (in years)" name="experience">
+            </div>
+
+            <!-- Submit button -->
+            <button type="submit">Sign Up</button>
+        </form>
+    </div>
+
+    <script>
+        // Toggle password visibility
+        function togglePassword() {
+            var passwordField = document.getElementById("password");
+            var toggleIcon = document.getElementById("toggleIcon");
+
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleIcon.src = "https://img.icons8.com/ios-glyphs/30/000000/invisible.png";
+            } else {
+                passwordField.type = "password";
+                toggleIcon.src = "https://img.icons8.com/ios-glyphs/30/000000/visible.png";
+            }
+        }
+
+        // Show/hide professional-exclusive fields based on role selection
+        document.getElementById('roleSelect').addEventListener('change', function () {
+            const professionalFields = document.getElementById('professionalFields');
+            const serviceSelect = document.getElementById('serviceSelect');
+            const experienceInput = document.querySelector("input[name='experience']");
+
+            if (this.value === 'professional') {
+                professionalFields.classList.remove('hidden');
+                serviceSelect.setAttribute('required', 'required');
+                experienceInput.setAttribute('required', 'required');
+            } else {
+                professionalFields.classList.add('hidden');
+                serviceSelect.removeAttribute('required');
+                experienceInput.removeAttribute('required');
+            }
+        });
+    </script>
+</body>
+</html>

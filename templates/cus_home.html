@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <style>
+        body {
+            font-family: Georgia, Times, 'Times New Roman', serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5faff;
+            color: #333;
+        }
+
+        /* Top Navbar Styles */
+        .navbar {
+            background-color: #002b5c;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+
+        .navbar .title {
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .navbar .menu {
+            display: flex;
+            gap: 20px;
+        }
+
+        .navbar .menu a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 5px 10px;
+            font-weight: bold;
+        }
+
+        .navbar .menu a:hover {
+            background-color: #4a90e2;
+            border-radius: 5px;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            padding: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #4a90e2;
+            margin-bottom: 20px;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px 20px;
+            border: 1px solid #ddd;
+            text-align: center;
+            color: #555;
+        }
+
+        th {
+            background-color: #4a90e2;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background-color: #f5faff;
+        }
+
+        /* Button Styles */
+        .btn {
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 5px 0;
+        }
+
+        .btn:hover {
+            background-color: #003d80;
+        }
+
+        .action-column {
+            width: 150px;
+        }
+
+        .action-column .btn {
+            width: 100%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navbar -->
+    <div class="navbar">
+        <div class="title">Welcome {{name}} </div>
+        <div class="menu">
+            <a href="{{url_for('cus_home')}}">Home</a>
+            <a href="{{url_for('cus_search')}}">Search</a>
+            <a href="{{url_for('cus_summary')}}">Summary</a>
+            <a href="{{url_for('logout')}}">Logout</a>
+        </div>
+    </div>
+
+
+    <!-- Flash messages -->
+    <div class="flashes">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+                {{ message }}
+                <button type="button" class="close" onclick="this.parentElement.style.display='none';">&times;</button>
+            </div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <h2>Home services at your doorstep!</h2>
+
+        <!-- Available Services Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Service Name</th>
+                    <th>Description</th>
+                    <th>Base Price</th>
+                    <th class="action-column">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for service in services %}
+                <tr>
+                    <td>{{service.id}}</td>
+                    <td>{{service.service_name}}</td>
+                    <td>{{service.description}}</td>
+                    <td>{{service.budget}}</td>
+                    <td class="action-column">
+                        <form action="{{url_for ('cus_book_service', service_id = service.id)}}" method="GET">
+                            <button type="submit" class="btn">Book Now!!</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Service History Section -->
+        <h2>Your Service History</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th style="width: 120px;">Start Date</th>
+                    <th style="width: 120px;">End Date</th>
+                    <th>Description</th>
+                    <th>Service Status</th>
+                    <th class="action-column">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for service_request in service_requests %}
+                <tr>
+                    <td>{{service_request.id}}</td>
+                    <td>{{service_request.date_of_request}}</td>
+                    <td>{{service_request.date_of_completion}}</td>
+                    <td>{{service_request.requirements}}</td>
+                    <td>{{service_request.service_status}}</td>
+                    <td class="action-column">
+                        {% if service_request.service_status != 'Closed' %}
+                        {% if service_request.service_status != 'Rejected' %}
+                        <form action="{{url_for('cus_edit_service',service_id = service_request.id)}}" method="GET">
+                            <button type="submit" class="btn" style="background-color: #FFA500;">Edit</button>
+                        </form>
+                        <form action="{{url_for('mark_as_complete',service_id = service_request.id)}}" method="POST">
+                            <button type="submit" class="btn">Mark as Complete</button>
+                        </form>
+                        {% endif %}
+                        {% endif %}
+                        {% if service_request.service_status == 'Rejected' %} 
+                        <form action="{{url_for('cus_serv_change_status',service_id = service_request.id)}}" method="POST">
+                            <button type="submit" class="btn" style="background-color:orange;">Change Status</button>
+                        </form>
+                        {% endif %}
+                        {% if service_request.service_status == 'Closed' %}
+                        <form action="{{url_for('cus_serv_review')}}" method="GET">
+                            <button type="submit" class="btn" style="background-color: #28a745;">Review</button>
+                        </form>
+                        {% endif %}
+
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

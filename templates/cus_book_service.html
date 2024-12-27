@@ -1,0 +1,100 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+    <head> 
+        <style> 
+            body { 
+                font-family: Georgia, 'Times New Roman', Times, serif; 
+                background-color: #f0f0f0; 
+                display: flex; 
+                justify-content: center; 
+                align-items: center; 
+                height: 100vh; 
+                margin: 0; 
+            } 
+            .login-container { 
+                background-color: #fff; 
+                padding: 30px; 
+                border-radius: 12px; 
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); 
+                width: 350px; 
+                text-align: center; 
+            } 
+            h2 { 
+                font-size: 24px; 
+                color: #333; 
+                margin-bottom: 25px; 
+            } 
+            label { 
+                display: block; 
+                margin-bottom: 8px; 
+                font-size: 14px; 
+                color: #555; 
+                text-align: left; 
+            } 
+            input { 
+                width: 100%; 
+                padding: 12px; 
+                margin-bottom: 20px; 
+                border: 1px solid #ddd; 
+                border-radius: 6px; 
+                font-size: 14px; 
+                box-sizing: border-box; 
+                transition: all 0.3s ease; 
+            } 
+            input:focus { 
+                border-color: #007bff; 
+                box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); 
+                outline: none; 
+            } 
+            button { 
+                width: 100%; 
+                padding: 12px; 
+                background-color: #007bff; 
+                border: none; 
+                border-radius: 6px; 
+                color: white; 
+                font-size: 16px; 
+                cursor: pointer; 
+                transition: background-color 0.3s ease; 
+            } 
+            button:hover { 
+                background-color: #0056b3; 
+            } 
+            .login-container form { 
+                display: flex; 
+                flex-direction: column; 
+                align-items: center; 
+            } 
+        </style> 
+        <meta charset="UTF-8"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+        <title>Book Services</title> 
+    </head> 
+    <body> 
+        <div class="login-container"> 
+            <h2>Book Service Here</h2> 
+            <form action="{{url_for('cus_book_service', service_id = service_id)}}" method="POST"> 
+                
+                <label for="service_id">Service Id</label> 
+                <input type="text" name="service_id" value = "{{service.id}}" required readonly>
+
+                <label for="date_of_request">Date of Request</label> 
+                <input type="date" name="date_of_request" required>   
+
+                <label for="date_of_completion">Date of Completion</label> 
+                <input type="date" name="date_of_completion" required>   
+                
+                <label for="description">Description</label> 
+                <input type="text" name="description" value = "{{service.description}}" required readonly>   
+                
+                <label for="payment_amount">Payment Amount (in INR)</label> 
+                <input type="text" name="payment_amount" value = "{{service.budget}}" required readonly> 
+                
+                <label for="remarks">Remarks</label> 
+                <input type="text" name="remarks" required> 
+                
+                <button type="submit">Submit</button> 
+            </form> 
+        </div> 
+    </body> 
+</html>

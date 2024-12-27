@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Functionality</title>
+    <style>
+        body {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            background-color: #f5faff; /* Soft blue background */
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            background-color: #183a75; /* Darker blue */
+            width: 250px;
+            padding: 20px;
+            height: 100vh;
+            color: white;
+        }
+
+        .sidebar .profile {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 10px 0;
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            margin: 10px 0;
+            text-align: left;
+            border-radius: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: #ccf0d9; /* Soft green on hover */
+            color: #183a75;
+        }
+
+        /* Main content styles */
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #4a90e2;
+        }
+
+        .search-container {
+            margin: 20px 0;
+        }
+
+        .search-container input::placeholder {
+            font-family: Georgia, serif; /* Placeholder font changed */
+        }
+
+        input, select, button {
+            padding: 10px;
+            border-radius: 8px; /* Rounded corners */
+            border: 1px solid #ccc;
+            outline: none;
+        }
+
+        button {
+            background-color: #4a90e2;
+            border: none;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #f5a6b2; /* Soft pink on hover */
+        }
+
+        /* Table styles */
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: white;
+            border-radius: 12px; /* Rounded corners */
+            overflow: hidden; /* To apply border-radius to the table */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        table th, table td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #ccc;
+        }
+
+        table th {
+            background-color: #e6f0ff;
+            color: #333;
+        }
+
+        table td {
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="title">Welcome {{name}}</div>
+        <div class="menu">
+            <a href="{{url_for('pro_home')}}">Home</a>
+            <a href="{{url_for('pro_search')}}">Search</a>
+            <a href="{{url_for('pro_summary')}}">Summary</a>
+            <a href="{{url_for('logout')}}">Logout</a>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="main-content">
+        <h2>Search by Criteria</h2>
+
+        <div class="search-container">
+            <form action="{{url_for('pro_search')}}" method="POST">
+                <label for="searchBy">Filter by:</label>
+                <select id="searchBy" name="searchBy">
+                    <option value="service-name">Service Name</option>
+                    <option value="pincode">Pincode</option>
+                    <option value="status">Status</option>
+                </select>
+                <input type="text" id="searchText" name = 'searchText' placeholder="Enter search text...">
+                <button type="submit">Search</button>
+            </form>
+        </div>
+
+        <!-- Search Results Table -->
+        {% if services %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Service Name</th>
+                    <th>Description</th>
+                    <th>Payment Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for service in services %}
+                <tr>
+                    <td>{{ service.id }}</td>
+                    <td>{{ service.service_name }}</td>
+                    <td>{{ service.description }}</td>
+                    <td>{{ service.budget }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+        <!-- Service Requests Table -->
+        {% if service_requests %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Date of Request</th>
+                    <th>Date of Completion</th>
+                    <th>Description</th>
+                    <th>Requested Service Status</th>
+                    <th>PinCode</th>
+                    <th>Payment Amount</th>
+                    <th>Messages</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for service_request in service_requests %}
+                <tr>
+                    <td>{{ service_request.id }}</td>
+                    <td>{{ service_request.date_of_request }}</td>
+                    <td>{{ service_request.date_of_completion }}</td>
+                    <td>{{ service_request.requirements }}</td>
+                    <td>{{ service_request.service_status }}</td>
+                    <td>{{ service_request.pincode }}</td>
+                    <td>{{ service_request.payment_amount }}</td>
+                    <td>{{ service_request.messages }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+
+</body>
+</html>

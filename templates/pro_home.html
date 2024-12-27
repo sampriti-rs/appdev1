@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Home</title>
+    <style>
+        body {
+            font-family: Georgia, Times, 'Times New Roman', serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5faff;
+            color: #333;
+        }
+
+        /* Top Navbar Styles */
+        .navbar {
+            background-color: #002b5c;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+
+        .navbar .title {
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .navbar .menu {
+            display: flex;
+            gap: 20px;
+        }
+
+        .navbar .menu a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 5px 10px;
+            font-weight: bold;
+        }
+
+        .navbar .menu a:hover {
+            background-color: #4a90e2;
+            border-radius: 5px;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            padding: 20px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        h2 {
+            color: #4a90e2;
+            margin-bottom: 20px;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px 20px;
+            border: 1px solid #ddd;
+            text-align: center;
+            color: #555;
+        }
+
+        th {
+            background-color: #4a90e2;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background-color: #f5faff;
+        }
+
+        /* Button Styles */
+        .btn {
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 5px 0;
+        }
+
+        .btn:hover {
+            background-color: #003d80;
+            color: white;
+        }
+
+        .action-column {
+            width: 150px;
+        }
+
+        .action-column .btn {
+            width: 100%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navbar -->
+    <div class="navbar">
+        <div class="title">Welcome {{name}}</div>
+        <div class="menu">
+            <a href="{{url_for('pro_home')}}">Home</a>
+            <a href="{{url_for('pro_search')}}">Search</a>
+            <a href="{{url_for('pro_summary')}}">Summary</a>
+            <a href="{{url_for('logout')}}">Logout</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h2>Requested Services</h2>
+
+        <!-- Table displaying the services -->
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Date of Request</th>
+                    <th>Date of Completion</th>
+                    <th>Requirements</th>
+                    <th>Pincode</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for service_request in services %}
+                <tr>
+                    {% if service_request.service_status == 'Requested' %}
+                    <td>{{service_request.id}}</td>
+                    <td>{{service_request.date_of_request}}</td>
+                    <td>{{service_request.date_of_completion}}</td>
+                    <td>{{service_request.requirements}}</td>
+                    <td>{{service_request.pincode}}</td>
+                    <td>{{service_request.service_status}}</td>
+                    
+                    <td class="action-column">
+                        {% if service_request.service_status == 'Requested' %}
+                        <form action="{{ url_for('pro_accept_service', service_id=service_request.id) }}" method="POST">
+                            <button type="submit" class="btn btn-success btn-sm">Accept</button>
+                        </form>
+                        <form action="{{ url_for('pro_reject_service', service_id=service_request.id) }}" method="POST">
+                            <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                        </form>
+                        {% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h2>Accepted or Rejected Services</h2>
+
+        <!-- Table displaying the services -->
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Date of Request</th>
+                    <th>Date of Completion</th>
+                    <th>Requirements</th>
+                    <th>Pincode</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for service_request in services %}
+                <tr>
+                    {% if service_request.service_status != 'Requested' %}
+                    <td>{{service_request.id}}</td>
+                    <td>{{service_request.date_of_request}}</td>
+                    <td>{{service_request.date_of_completion}}</td>
+                    <td>{{service_request.requirements}}</td>
+                    <td>{{service_request.pincode}}</td>
+                    <td>{{service_request.service_status}}</td>
+                    <td class="action-column">
+                        {% if service_request.service_status == 'Accepted' %}
+                        <form action="{{url_for('pro_complete',service_id = service_request.id)}}" method="POST">
+                            <button type="submit" class="btn btn-success btn-sm">Mark as Complete</button>
+                        </form>
+                        {% endif %}
+                        {% if service_request.service_status == 'Closed' %}
+                        <form action="{{url_for('pro_serv_review')}}" method="GET">
+                            <button type="submit" class="btn btn-success btn-sm">Review</button>
+                        </form>
+                        {% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

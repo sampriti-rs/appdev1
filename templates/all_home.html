@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <style>
+        body {
+            font-family: Georgia, 'Times New Roman', serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: url('{{ url_for("static", filename="homepageimage.png") }}') no-repeat center center fixed;
+            background-size: cover;
+            text-align: center;
+        }
+
+        .container {
+            width: 45%; /* Cover the red-enclosed width area */
+            height: 41%; /* Cover the red-enclosed height area */
+            background-color: #003366; /* Dark blue opaque background */
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            opacity: 100%;
+            margin-top: 1rem;
+        }
+
+        h1 {
+            color: whitesmoke;
+            margin-bottom: 3px;
+            font-size: 2rem;
+        }
+
+        p {
+            color: whitesmoke;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        a {
+            text-decoration: none;
+            color: whitesmoke;
+            font-size: 1rem;
+            padding: 10px 20px;
+            border: 2px solid #004080;
+            border-radius: 10px;
+            transition: background-color 0.3s, color 0.3s;
+            margin: 5px;
+        }
+
+        a:hover {
+            background-color: #004080;
+            color: lightcoral;
+        }
+
+        .link-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Welcome to Abode-Aide</h1>
+        <p>Your one-stop solution for all household services.</p>
+        <p>Sign up to get started or log in if you already have an account.</p>
+        <div class="link-container">
+            <!-- Use Flask's url_for function to link to the appropriate route -->
+            <a href="{{ url_for('signup') }}">Sign Up</a>
+            <a href="{{ url_for('login') }}">Login</a>
+        </div>
+    </div>
+
+</body>
+</html>

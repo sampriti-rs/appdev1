@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Functionality</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            background-color: #f5faff; 
+        }
+
+        body {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column; /* Ensure the navbar aligns properly at the top */
+            min-height: 100vh;
+            background-color: #f5faff;
+        }
+
+        .navbar {
+            background-color: #002f6c;
+            color: white;
+            width: 100%; /* Make sure the navbar spans the full width */
+            position: fixed; /* Keep the navbar at the top of the viewport */
+            top: 0;
+            left: 0;
+            z-index: 1000; /* Ensure the navbar is above all other content */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Add a slight shadow for better definition */
+        }
+
+        .navbar-brand {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #f7f9fc;
+            padding-left: 15px; /* Add some spacing on the left */
+        }
+
+        .navbar-nav {
+            margin-left: auto; /* Align navigation items to the right */
+        }
+
+        .navbar-nav .nav-link {
+            color: #f7f9fc;
+            padding: 10px 15px; /* Adjust spacing for better appearance */
+            text-decoration: none;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #00509d;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            text-align: center;
+            margin-top: 60px; /* Add margin to avoid overlapping with fixed navbar */
+        }
+
+        h2 {
+            color: #4a90e2;
+        }
+
+        /* Main content styles */
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            text-align: center;
+        }
+        h2 {
+            color: #4a90e2;
+        }
+
+        .search-container {
+            margin: 20px 0;
+        }
+
+        .search-container input::placeholder {
+            font-family: Georgia, serif; /* Placeholder font changed */
+        }
+
+        input, select, button {
+            padding: 10px;
+            border-radius: 8px; /* Rounded corners */
+            border: 1px solid #ccc;
+            outline: none;
+        }
+
+        button {
+            background-color: #4a90e2;
+            border: none;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #f5a6b2; /* Soft pink on hover */
+        }
+
+        /* Table styles */
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: white;
+            border-radius: 12px; /* Rounded corners */
+            overflow: hidden; /* To apply border-radius to the table */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        table th, table td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #ccc;
+        }
+
+        table th {
+            background-color: #e6f0ff;
+            color: #333;
+        }
+
+        table td {
+            background-color: white;
+        }
+        .confirmation-container {
+            text-align: center;
+            background-color: #ffffff; /* White background for container */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
+            width: 300px;
+        }
+        .flash-message {
+            background-color: #e0ffe0; /* Light green background for success message */
+            color: #008000; /* Dark green text */
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    
+
+    <!-- Main content -->
+    <div class="main-content">
+        <nav class="navbar navbar-expand-lg">
+            <a class="navbar-brand" href="{{ url_for('cus_home') }}">Welcome {{name}} </a>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('cus_summary') }}">Summary</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+            </ul>
+        </nav>
+
+
+        <h2>Search by Criteria</h2>
+
+        <div class="search-container">
+            <form action="{{url_for('cus_search')}}" method="POST">
+                <label for="searchBy">Filter by:</label>
+                <select id="searchBy" name="searchBy">
+                    <option value="service-name">Service Name</option>
+                    <option value="pincode">Pincode</option>
+                    <option value="status">Status</option>
+                </select>
+                <input type="text" id="searchText" name = 'searchText' placeholder="Enter search text...">
+                <button type="submit">Search</button>
+            </form>
+        </div>
+
+            <!-- Flash message section -->
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="flash-message">
+                        {% for message in messages %}
+                            <p>{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+    
+            <!-- Button to go to the Home Page -->
+            <form action="{{ url_for('cus_home') }}" method="POST">
+                <button type="submit" class="btn-primary">Go to Your Home Page</button>
+            </form>
+
+        <!-- Search Results Table --> 
+        {% if services %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Service Name</th>
+                    <th>Description</th>
+                    <th>Payment Amount</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for service in services %}
+                <tr>
+                    <td>{{ service.id }}</td>
+                    <td>{{ service.service_name }}</td>
+                    <td>{{ service.description }}</td>
+                    <td>{{ service.budget }}</td>
+                    <td class="action-column">
+                        <form action="{{url_for ('cus_book_service', service_id = service.id)}}" method="GET">
+                            <button type="submit" class="btn">Book Now!</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+        <!-- Service Requests Table -->
+        {% if service_requests %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Date of Request</th>
+                    <th>Date of Completion</th>
+                    <th>Description</th>
+                    <th>Requested Service Status</th>
+                    <th>PinCode</th>
+                    <th>Payment Amount</th>
+                    <th>Messages</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for service_request in service_requests %}
+                <tr>
+                    <td>{{ service_request.id }}</td>
+                    <td>{{ service_request.date_of_request }}</td>
+                    <td>{{ service_request.date_of_completion }}</td>
+                    <td>{{ service_request.requirements }}</td>
+                    <td>{{ service_request.service_status }}</td>
+                    <td>{{ service_request.pincode }}</td>
+                    <td>{{ service_request.payment_amount }}</td>
+                    <td>{{ service_request.messages }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
+    </div>
+
+</body>
+</html>

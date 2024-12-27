@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Search Results</title>
+    <style>
+        /* General styling */
+        body {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Container styling */
+        .container {
+            width: 80%;
+            margin: 50px auto;
+            background-color: #e0e0e0; /* Same light gray background */
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Title style */
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        /* Table styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #007bff; /* Blue header */
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9; /* Light alternate row color */
+        }
+
+        tr:hover {
+            background-color: #f1f1f1; 
+        }
+
+        /* Rounded corners for the table */
+        table, th, td {
+            border-radius: 8px;
+            overflow: hidden; 
+        }
+
+        /* Status pill styling */
+        .status {
+            padding: 5px 10px;
+            border-radius: 15px;
+            color: white;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .status.active {
+            background-color: #28a745; 
+        }
+
+        .status.inactive {
+            background-color: #dc3545; 
+        }
+
+        .new-search-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 16px;
+            display: inline-block;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        .new-search-btn:hover {
+            background-color: #0056b3;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Here are your Search Results!</h2>
+
+        <!-- Table to display search results -->
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Service</th>
+                    <th>Category</th>
+                    <th>Date Created</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>101</td>
+                    <td>John Doe</td>
+                    <td>AC Repair</td>
+                    <td>Maintenance</td>
+                    <td>2023-09-01</td>
+                    <td><span class="status active">Active</span></td>
+                </tr>
+                <tr>
+                    <td>102</td>
+                    <td>Jane Smith</td>
+                    <td>Plumbing</td>
+                    <td>Home Services</td>
+                    <td>2023-08-25</td>
+                    <td><span class="status inactive">Inactive</span></td>
+                </tr>
+                <tr>
+                    <td>103</td>
+                    <td>Alex Johnson</td>
+                    <td>Electrician</td>
+                    <td>Home Services</td>
+                    <td>2023-07-15</td>
+                    <td><span class="status active">Active</span></td>
+                </tr>
+                <tr>
+                    <td>104</td>
+                    <td>Emily Davis</td>
+                    <td>Cleaning</td>
+                    <td>Home Services</td>
+                    <td>2023-06-30</td>
+                    <td><span class="status inactive">Inactive</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Button for new search -->
+        <a href="ad_search.html" class="new-search-btn">New Search</a>
+    </div>
+
+</body>
+</html>

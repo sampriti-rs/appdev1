@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body {
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            text-align: center;
+            position: relative;
+        }
+        .login-container h2 {
+            margin: 0 0 20px;
+            font-size: 24px;
+        }
+        .login-container input[type="text"],
+        .login-container input[type="password"] {
+            width: calc(100% - 40px); /* Adjust width to accommodate eye icon */
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 20px;
+            border: 1px solid #ccc;
+            outline: none;
+            text-align: center;
+            font-family: Georgia, serif;
+        }
+        .login-container input::placeholder {
+            font-family: Georgia, serif;
+        }
+        .login-container a {
+            display: block;
+            margin: 10px 0;
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        .login-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 20px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 20px 0;
+        }
+        .login-container button:hover {
+            background-color: #45a049;
+        }
+
+        /* Styling for password container and eye icon */
+        .password-container {
+            position: relative;
+        }
+
+        .eye-icon {
+            cursor: pointer;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+        }
+
+        .eye-icon img {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Flash message styling */
+        .flashes {
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-width: 400px;
+            z-index: 1000;
+        }
+        .alert {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .close {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Flash messages -->
+    <div class="flashes">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                    <span class="close" onclick="this.parentElement.style.display='none';">&times;</span>
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Login Form -->
+    <div class="login-container">
+        <h2>Login</h2>
+        <form action="{{ url_for('login') }}" method="POST">
+            <input type="text" placeholder="Email" name="email" required>
+            <!-- Password field with eye icon -->
+            <div class="password-container">
+                <input type="password" placeholder="Password" name="password" id="password" required>
+                <span class="eye-icon" onclick="togglePassword()">
+                    <img id="toggleIcon" src="https://img.icons8.com/ios-glyphs/30/000000/visible.png" />
+                </span>
+            </div>
+            <a href="{{ url_for('signup') }}">Register Here!</a>
+            <button type="submit">Login</button>
+            <a href="{{ url_for('forgot_password') }}">Forgot Password?</a>
+        </form>
+    </div>
+
+    <script>
+        function togglePassword() {
+            var passwordField = document.getElementById("password");
+            var toggleIcon = document.getElementById("toggleIcon");
+
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleIcon.src = "https://img.icons8.com/ios-glyphs/30/000000/invisible.png"; //'invisible'
+            } else {
+                passwordField.type = "password";
+                toggleIcon.src = "https://img.icons8.com/ios-glyphs/30/000000/visible.png"; //'visible'
+            }
+        }
+    </script>
+</body>
+</html>

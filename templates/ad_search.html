@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Search Functionality</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            background-color: #f5faff; /* Soft blue background */
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            background-color: #183a75; /* Darker blue */
+            width: 250px;
+            padding: 20px;
+            height: 100vh;
+            color: white;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            color: #f5faff;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin: 15px 0;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 10px;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+            text-align: center;
+        }
+
+        .sidebar a:hover {
+            background-color: #ccf0d9; /* Soft green on hover */
+            color: #183a75;
+        }
+
+        /* Main content styles */
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #4a90e2;
+        }
+
+        .search-container {
+            margin: 20px 0;
+        }
+
+        .search-container label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .search-container input::placeholder {
+            font-family: Georgia, serif; /* Placeholder font changed */
+        }
+
+        input, select, button {
+            padding: 10px;
+            border-radius: 8px; /* Rounded corners */
+            border: 1px solid #ccc;
+            outline: none;
+        }
+
+        button {
+            background-color: #4a90e2;
+            border: none;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #f5a6b2; /* Soft pink on hover */
+        }
+
+        /* Table styles */
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: white;
+            border-radius: 12px; /* Rounded corners */
+            overflow: hidden; /* To apply border-radius to the table */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        table th, table td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #ccc;
+        }
+
+        table th {
+            background-color: #e6f0ff;
+            color: #333;
+        }
+
+        table td {
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Hello Admin!</h2>
+        <ul>
+            <li><a href="{{url_for('admin_dash')}}">Home</a></li>
+            <li><a href="{{url_for('ad_search')}}">Search</a></li>
+            <li><a href="{{url_for('ad_summary')}}">Summary</a></li>
+            <li><a href="{{url_for('logout')}}">Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main content -->
+    <div class="main-content">
+        <h2>Search by Admin</h2>
+
+        <div class="search-container">
+            <form action="{{url_for('ad_search')}}" method="post">
+                <label for="search-text">Search User:</label>
+                <input type="text" id="search-text" name="search-text" placeholder="Enter search query...">
+                <button type="submit">Search</button>
+            </form>
+        </div>
+
+        <!-- Search Results Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Contact Number</th>
+                    <th>Pincode</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.contact_num }}</td>
+                    <td>{{ user.pincode }}</td>
+                    <td class = "action-column">
+                        <div class="btn-group">
+                            <a href="{{ url_for('unblock', user_id=user.id) }}" 
+                            class="btn btn-success btn-sm">Unblock</a>
+                            <a href="{{ url_for('ad_review') }}" 
+                            class="btn btn-warning btn-sm">Review</a>
+                            <a href="{{ url_for('block', user_id=user.id) }}" 
+                            class="btn btn-danger btn-sm">Block</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

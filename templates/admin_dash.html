@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            background-color: #f7f9fc;
+        }
+        .navbar {
+            background-color: #002f6c;
+            color: white;
+        }
+        .navbar-brand {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #f7f9fc;
+        }
+        .navbar-nav .nav-link {
+            color: #f7f9fc;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #00509d;
+        }
+        .container h2 {
+            color: #00509d;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .btn-success {
+            background-color: #00509d;
+            border: none;
+        }
+        .btn-success:hover {
+            background-color: #003f7a;
+        }
+        .btn-warning {
+            background-color: #ffc107;
+            border: none;
+        }
+        .btn-danger {
+            background-color: #d9534f;
+            border: none;
+        }
+        .table {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+        }
+        .table th, .table td {
+            text-align: center;
+            vertical-align: middle;
+        }
+        .table thead {
+            background-color: #00509d;
+            color: #f7f9fc;
+        }
+        .table tbody tr:nth-child(even) {
+            background-color: #f2f6fa;
+        }
+        .action-column {
+            width: 250px;
+        }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand" href="#">Welcome {{name}} </a>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_dash') }}">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('ad_search') }}">Search</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('ad_summary') }}">Summary</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="container mt-5">
+  
+        <!-- Flash messages -->
+         {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                  <div class="flashes">
+                      {% for category, message in messages %}
+                          <div class="alert alert-{{ category }}">
+                              {{ message }}
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                              </button>
+                          </div>
+                      {% endfor %}
+                  </div>
+              {% endif %}
+          {% endwith %}
+          </div>
+
+
+    <div class="container mt-4">
+        <h2>Services</h2>
+        <a href="{{ url_for('add_service') }}" class="btn btn-success mb-3">Add New Service</a>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Service Name</th>
+                    <th>Description</th>
+                    <th>Base Price</th>
+                    <th class="action-column">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for service in services %}
+                <tr>
+                    <td>{{ service.id }}</td>
+                    <td>{{ service.service_name }}</td>
+                    <td>{{ service.description }}</td>
+                    <td>{{ service.budget }}</td>
+                    <td class="action-column">
+                        <div class="btn-group">
+                            <form action="{{ url_for('edit_service', service_id=service.id) }}" 
+                            method="GET" style="display:inline;">
+                                <button type="submit" class="btn btn-warning btn-sm">Edit</button>
+                            </form>
+                            <form action="{{ url_for('delete_service', service_id=service.id) }}" 
+                            method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h2>Users: Customer</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Contact Number</th>
+                    <th>Pincode</th>
+                    <th class="action-column">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    {% if user.block != 1 %}
+                    {% if user.flag == 0 %}
+                    {% if user.role == 'customer' %}
+                    {% if user.regn_status != 0 %}
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.contact_num }}</td>
+                    <td>{{ user.pincode }}</td>
+                    <td class="action-column">
+                        <div class="btn-group">
+                            {% if user.regn_status == 0 %}
+                            <a href="{{ url_for('cus_approve', user_id = user.id)}}" 
+                            class="btn btn-success btn-sm">Approve</a>
+                            <a href="{{ url_for('cus_reject', user_id = user.id)}}" 
+                            class="btn btn-danger btn-sm">Reject</a>
+                            {% endif %}
+                            <a href="{{ url_for('flag', user_id=user.id) }}" 
+                            class="btn btn-warning btn-sm">Flag</a>
+                            <a href="{{ url_for('block', user_id=user.id) }}" 
+                            class="btn btn-danger btn-sm">Block</a>
+                        </div>
+                    </td>
+                    {% endif %}
+                    {% endif %}
+                    {% endif %}
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h2>Users: Professional</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email Id</th>
+                    <th>Contact Number</th>
+                    <th>Pincode</th>
+                    <th>Service Type</th>
+                    <th>Experience (Yrs)</th>
+                    <th class="action-column">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    {% if user.block != 1 %}
+                    {% if user.flag == 0 %}
+                    {% if user.role == 'professional' %}
+                    {% if user.regn_status != 0 %}
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.contact_num }}</td>
+                    <td>{{ user.pincode }}</td>
+                    <td>{{ user.service_type }}</td>
+                    <td>{{ user.experience }}</td>
+                    <td class="action-column">
+                        <div class="btn-group">
+                            {% if user.regn_status == 0 %}
+                            <a href="{{ url_for('pro_approve', user_id = user.id)}}" 
+                            class="btn btn-success btn-sm">Approve</a>
+                            <a href="{{ url_for('pro_reject', user_id = user.id)}}" 
+                            class="btn btn-danger btn-sm">Reject</a>
+                            {% endif %}
+                            <a href="{{ url_for('flag', user_id=user.id) }}" 
+                            class="btn btn-warning btn-sm">Flag</a>
+                            <a href="{{ url_for('block', user_id=user.id) }}" 
+                            class="btn btn-danger btn-sm">Block</a>
+                        </div>
+                    </td>
+                    {% endif %}
+                    {% endif %}
+                    {% endif %}
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h2>Users: Flagged</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Contact Number</th>
+                    <th>Role</th>
+                    <th class="action-column">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    {% if user.flag == 1 %}
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.contact_num }}</td>
+                    <td>{{ user.role }}</td>
+                    <td class="action-column">
+                        <div class="btn-group">
+                            <a href="{{ url_for('unflag', user_id=user.id) }}" 
+                            class="btn btn-success btn-sm">Unflag</a>
+                        </div>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h2>Users: Blocked</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Contact Number</th>
+                    <th>Role</th>
+                    <th class="action-column">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    {% if user.block == 1 %}
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.contact_num }}</td>
+                    <td>{{ user.role }}</td>
+                    <td class="action-column">
+                        <div class="btn-group">
+                            <a href="{{ url_for('unblock', user_id=user.id) }}" class="btn btn-success btn-sm">Unblock</a>
+                        </div>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h2>Users: Rejected or To-be Approved</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Contact Number</th>
+                    <th>Role</th>
+                    <th class="action-column">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    {% if user.regn_status == 0 %}
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.contact_num }}</td>
+                    <td>{{ user.role }}</td>
+                    <td class="action-column">
+                        <div class="btn-group">
+                            {% if user.role == 'professional' %}
+                            <a href="{{ url_for('pro_approve', user_id = user.id)}}" 
+                            class="btn btn-warning btn-sm">Reapprove Professional</a>
+                            {% endif %}
+                            {% if user.role == 'customer' %}
+                            <a href="{{ url_for('cus_approve', user_id = user.id)}}" 
+                            class="btn btn-warning btn-sm">Reapprove Customer</a>
+                            {% endif %}
+                        </div>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+</body>
+</html>
